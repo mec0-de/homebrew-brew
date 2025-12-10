@@ -8,21 +8,14 @@ class Filius < Formula
   depends_on "openjdk@21"
 
   def install
-    # Alles aus dem ZIP nach libexec kopieren
     libexec.install Dir["*"]
-
-    # Start-Script 'filius' im bin-Verzeichnis anlegen
     (bin/"filius").write <<~EOS
       #!/bin/bash
-      exec "#{Formula["openjdk@21"].opt_bin}/java" -jar "#{libexec}/filius.jar" "$@"
+      exec /usr/bin/open -a "#{Formula["openjdk@21"].opt_bin}/java" --args -jar "#{libexec}/filius.jar" "$@"
     EOS
   end
 
   test do
-    # Es gibt keinen echten CLI-Test, aber ein Aufruf ohne GUI-Fehler reicht meist
-    system "#{bin}/filius", "--version"
-  rescue
-    # Falls Filius kein --version unterstützt, ignorieren wir den Fehler
     true
   end
 end
